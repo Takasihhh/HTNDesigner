@@ -1,0 +1,13 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="MainContainer">
+        <ui:VisualElement name="Title" style="height: 18px; flex-direction: row;">
+            <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveBtn" enable-rich-text="true" style="width: 68px; justify-content: center; align-items: center;" />
+            <ui:Button text="Load" display-tooltip-when-elided="true" name="LoadBtn" enable-rich-text="true" style="width: 68px;" />
+        </ui:VisualElement>
+        <HTNDesigner.Editor.TwoPanelExtensionHorizontal style="width: 654px; height: 480px;" />
+        <ui:VisualElement name="Title" style="height: 14px; flex-direction: row;">
+            <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveBtn" enable-rich-text="true" style="width: 68px; justify-content: center; align-items: center;" />
+            <ui:Button text="Load" display-tooltip-when-elided="true" name="SaveBtn" enable-rich-text="true" style="width: 68px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
