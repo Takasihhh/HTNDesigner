@@ -1,0 +1,3 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <HTNDesigner.Editor.BlackBoardGraphView focusable="true" style="width: 353px; height: 454px;" />
+</ui:UXML>

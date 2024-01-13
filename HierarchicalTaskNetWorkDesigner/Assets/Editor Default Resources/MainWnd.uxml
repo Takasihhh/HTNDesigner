@@ -1,8 +1,12 @@
 <ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
     <ui:VisualElement name="MainContainer">
-        <ui:VisualElement name="Title" style="height: 18px; flex-direction: row;">
-            <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveBtn" enable-rich-text="true" style="width: 68px; justify-content: center; align-items: center;" />
-            <ui:Button text="Load" display-tooltip-when-elided="true" name="LoadBtn" enable-rich-text="true" style="width: 68px;" />
+        <ui:VisualElement name="Title" style="height: 16px; flex-direction: row;">
+            <ui:Button text="Save" display-tooltip-when-elided="true" name="SaveBtn" enable-rich-text="true" style="width: 68px; justify-content: center; align-items: center; height: 19px;" />
+            <ui:Button text="Load" display-tooltip-when-elided="true" name="LoadBtn" enable-rich-text="true" style="width: 68px; height: 18px;" />
+            <ui:Button text="Clear" display-tooltip-when-elided="true" name="ClearBtn" style="height: 17px;" />
+            <ui:Button text="黑板" display-tooltip-when-elided="true" name="BlackBoardBtn" style="height: 17px;" />
+            <ui:Button text="缩略图" display-tooltip-when-elided="true" name="MiniMapBtn" style="height: 18px; -unity-font-style: normal;" />
+            <ui:TextField picking-mode="Ignore" label="FileName" value="filler text" text="输入文件名" name="FileNameText" style="width: 377px; height: 27px;" />
         </ui:VisualElement>
         <HTNDesigner.Editor.TwoPanelExtensionHorizontal style="width: 654px; height: 480px;" />
         <ui:VisualElement name="Title" style="height: 14px; flex-direction: row;">

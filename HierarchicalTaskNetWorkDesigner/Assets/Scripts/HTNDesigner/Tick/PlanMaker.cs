@@ -1,6 +1,9 @@
 using System.Collections.Generic;
+using System.Linq;
 using HTNDesigner.BlackBoard;
+using HTNDesigner.DataStructure;
 using HTNDesigner.Domain;
+using HTNDesigner.Utilies;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -14,9 +17,9 @@ namespace HTNDesigner.Tick
         private List<PrimitiveTask> _planList;
         private Stack<TaskNode> _taskToProcess;
         private WorldStateBlackBoard _workingWorldState;
-        private TaskNode _currentTask;
+        private TaskNode _currentTaskNode;
         private ITaskAgent _agent;
-
+        private TaskGraph _graph;
         private List<PrimitiveTask> _recordList;
         private Stack<TaskNode> _recordStack;
 
@@ -24,11 +27,11 @@ namespace HTNDesigner.Tick
         public PlanMaker(ITaskAgent agent)
         {
             _agent = agent;
+            _graph = agent.TaskGraph;
             _recordList ??= new List<PrimitiveTask>();
             _recordStack ??= new Stack<TaskNode>();
             _planList = new List<PrimitiveTask>();
             _taskToProcess = new Stack<TaskNode>();
-            Debug.LogError("最开始"+_agent.m_worldState.GetValue<bool>("需要治疗"));
         }
 
         /// <summary>
@@ -40,25 +43,30 @@ namespace HTNDesigner.Tick
         {
             _workingWorldState = ScriptableObject.CreateInstance<WorldStateBlackBoard>();
            // Debug.LogError(_agent.m_worldState.GetValue<bool>("需要治疗"));
-            _workingWorldState.DeepCopy(_agent.m_worldState);
+            _workingWorldState.DeepCopy(_agent.WorldState_BB);
+            // _workingWorldState = ReflectionMethodExtension.DeepCopy(_agent.WorldState_BB);
+            _graph.Initialize();
             // Debug.LogError("agent"+_agent.m_worldState.GetValue<bool>("是否到达")+"副本"+_workingWorldState.GetValue<bool>("是否到达"));
             _planList = new List<PrimitiveTask>();
-            _taskToProcess.Push(_agent.m_Root);
+            _taskToProcess.Push(_graph.m_RootNode);
             
             while (_taskToProcess.Count > 0)
             {
-                _currentTask = _taskToProcess.Pop();
-                if (_currentTask.m_type == TaskNode.TaskType.COMPOUND)
+                _currentTaskNode = _taskToProcess.Pop();
+                if (_currentTaskNode.taskType == TaskNode.TaskType.COMPOUND)
                 {
                     //如果为复合任务
-                    var sMethod = _currentTask.m_CompoundTask.SearchForSatisfaiedMethod(_workingWorldState);
+                    CompoundTask curTask =  _graph.SearchForCompoundTask(_currentTaskNode.ID);
+                    var sMethod = curTask.SearchForSatisfaiedMethod(_workingWorldState);
                     if (sMethod != null)
                     {
                         RecordStack();
+                        sMethod.SubTasks.Reverse();
                         foreach (var subTask in sMethod.SubTasks)
                         {
                             _taskToProcess.Push(subTask);
                         }
+                        sMethod.SubTasks.Reverse();
                     }
                     else
                     {
@@ -67,12 +75,13 @@ namespace HTNDesigner.Tick
                 }
                 else
                 {
+                    PrimitiveTask curTask = _graph.SearchForPrimitiveTask(_currentTaskNode.ID);
                     //如果为原子任务,检查preconditions
-                    if (_currentTask.m_Condition == null || _currentTask.m_Condition.CheckCondition(_workingWorldState))
+                    if (curTask.CheckConditions(_workingWorldState))
                     {
                         RecordStack();
-                        _currentTask.m_PrimitiveTask.ApplyEffect(ref _workingWorldState);
-                        _planList.Add(_currentTask.m_PrimitiveTask);
+                        curTask.ApplyEffect(ref _workingWorldState);
+                        _planList.Add(curTask);
                     }
                     else
                     {
@@ -97,7 +106,8 @@ namespace HTNDesigner.Tick
                 Debug.LogError("当前任务列表为空，没有可执行的任务");
             }
 #endregion
-            GameObject.Destroy(_workingWorldState);
+            //GameObject.Destroy(_workingWorldState);
+            _workingWorldState = null;
             return _planList;
         }
 

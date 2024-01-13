@@ -1,0 +1,54 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5edd09a34d17470e9a57ff2437a54655, type: 3}
+  m_Name: filler textGraph
+  m_EditorClassIdentifier: 
+  <FileName>k__BackingField: filler text
+  <Nodes>k__BackingField:
+  - <ID>k__BackingField: 70cbd237-8337-419e-ad9e-ccd74d842caf
+    <Name>k__BackingField: RootNode
+    <NodeType>k__BackingField: 1
+    <ConnectionID>k__BackingField:
+    - 6f43bd81-1725-4e58-89ed-03cca0b20fca
+    - b7a1a268-dc30-448a-b76b-9a35e4e89457
+    <Position>k__BackingField: {x: 159.33334, y: 330.66666}
+    <Conditions>k__BackingField: []
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 1
+  - <ID>k__BackingField: 6f43bd81-1725-4e58-89ed-03cca0b20fca
+    <Name>k__BackingField: IdleTask
+    <NodeType>k__BackingField: 0
+    <ConnectionID>k__BackingField: []
+    <Position>k__BackingField: {x: 441.3333, y: 418.66666}
+    <Conditions>k__BackingField: []
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  - <ID>k__BackingField: b7a1a268-dc30-448a-b76b-9a35e4e89457
+    <Name>k__BackingField: MoveToNearestTree
+    <NodeType>k__BackingField: 0
+    <ConnectionID>k__BackingField: []
+    <Position>k__BackingField: {x: 456, y: 226.66666}
+    <Conditions>k__BackingField:
+    - PropertyType: Boolean
+      PropertyName: OnArriveTree
+      PropertyValue: 
+    - PropertyType: Boolean
+      PropertyName: HasAxe
+      PropertyValue: True
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  <BBValue>k__BackingField:
+    <BBValueList>k__BackingField:
+    - typeName: SensorBool
+      Name: OnArriveTree
+    - typeName: SensorBool
+      Name: HasAxe

@@ -1,0 +1,98 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16eaba3fc12c4cc4b066af6be8f2a66a, type: 3}
+  m_Name: filler text
+  m_EditorClassIdentifier: 
+  m_GraphData:
+    rid: 8211920922572226563
+  references:
+    version: 2
+    RefIds:
+    - rid: 8211920922572226563
+      type: {class: TaskGraph, ns: HTNDesigner.DataStructure, asm: Assembly-CSharp}
+      data:
+        rootTask:
+          _taskType: 1
+          _id: 70cbd237-8337-419e-ad9e-ccd74d842caf
+        _primitiveTaskTable:
+          rid: 8211920922572226564
+        _compoundTaskTable:
+          rid: 8211920922572226565
+        _primitiveTasks:
+        - rid: 8211920922572226566
+        - rid: 8211920922572226567
+        _compoundTasks:
+        - rid: 8211920922572226568
+    - rid: 8211920922572226564
+      type: {class: PassWordDictionary, ns: HTNDesigner.DataStructure, asm: Assembly-CSharp}
+      data:
+        list:
+        - Key: 6f43bd81-1725-4e58-89ed-03cca0b20fca
+          Value: 0
+        - Key: b7a1a268-dc30-448a-b76b-9a35e4e89457
+          Value: 1
+    - rid: 8211920922572226565
+      type: {class: PassWordDictionary, ns: HTNDesigner.DataStructure, asm: Assembly-CSharp}
+      data:
+        list:
+        - Key: 70cbd237-8337-419e-ad9e-ccd74d842caf
+          Value: 0
+    - rid: 8211920922572226566
+      type: {class: IdleTask, ns: , asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField: []
+        <TaskName>k__BackingField: IdleTask
+    - rid: 8211920922572226567
+      type: {class: MoveToNearestTree, ns: , asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField:
+        - PropertyType: Boolean
+          PropertyName: OnArriveTree
+          PropertyValue: 
+        - PropertyType: Boolean
+          PropertyName: HasAxe
+          PropertyValue: True
+        <TaskName>k__BackingField: MoveToNearestTree
+    - rid: 8211920922572226568
+      type: {class: CompoundTask, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _methods:
+        - rid: 8211920922572226569
+        - rid: 8211920922572226570
+    - rid: 8211920922572226569
+      type: {class: Method, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField: []
+        _subTaskNodesID:
+        - rid: 8211920922572226571
+    - rid: 8211920922572226570
+      type: {class: Method, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField:
+        - PropertyType: Boolean
+          PropertyName: OnArriveTree
+          PropertyValue: 
+        - PropertyType: Boolean
+          PropertyName: HasAxe
+          PropertyValue: True
+        _subTaskNodesID:
+        - rid: 8211920922572226572
+    - rid: 8211920922572226571
+      type: {class: TaskNode, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _taskType: 0
+        _id: 6f43bd81-1725-4e58-89ed-03cca0b20fca
+    - rid: 8211920922572226572
+      type: {class: TaskNode, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _taskType: 0
+        _id: b7a1a268-dc30-448a-b76b-9a35e4e89457

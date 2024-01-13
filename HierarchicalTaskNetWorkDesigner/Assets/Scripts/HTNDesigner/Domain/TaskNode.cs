@@ -7,70 +7,32 @@ namespace HTNDesigner.Domain
     [Serializable]
     public sealed class TaskNode
     {
-        //-----------------------字段---------------------------------
-        protected TaskStatus _taskStatus;
-        
         [Serializable]
         public enum TaskType
         {
             PRIMITIVE,
             COMPOUND
         }
-        
-        [Serializable]
-        public struct ConditionPrmitiveTask
-        {
-            [SerializeReference] public PrimitiveTask task;
-            [SerializeReference] public ConditionContainer container;
-        }
-
         [SerializeField]private TaskType _taskType;
-        [SerializeReference]private CompoundTask _compoundTask;
-        [SerializeField]private ConditionPrmitiveTask _primitiveTask;
-
-        
-        
-        
-        
-        //---------------------------成员函数---------------------------
-        public TaskNode(){}
-        public TaskNode(CompoundTask compoundTask)
+        [SerializeField] private string _id;
+        [SerializeField] private string _name;
+        public TaskNode(TaskType taskType, string id,string name = "")
         {
-            _taskType =  TaskType.COMPOUND;
-            _compoundTask = compoundTask;
+            _id = id;
+            _taskType = taskType;
+            _name = name;
         }
 
-        public TaskNode(ConditionPrmitiveTask primitiveTask)
-        {
-            _taskType = TaskType.PRIMITIVE;
-            _primitiveTask = primitiveTask;
-        }
-        
-        
-        //---------------------------属性封装--------------------------
-        public TaskStatus m_TaskStatus
-        {
-            get => _taskStatus;
-        }
 
-        public TaskType m_type
+        public TaskType taskType
         {
             get => _taskType;
+            private set => _taskType = value;
         }
-
-        public CompoundTask m_CompoundTask
+        
+        public string ID
         {
-            get => _compoundTask;
-        }
-
-        public PrimitiveTask m_PrimitiveTask
-        {
-            get => _primitiveTask.task;
-        }
-
-        public ConditionContainer m_Condition
-        {
-            get => _primitiveTask.container;
+            get => _id;
         }
     }
 }

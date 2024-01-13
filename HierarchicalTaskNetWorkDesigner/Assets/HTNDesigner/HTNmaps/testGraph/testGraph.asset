@@ -1,0 +1,185 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16eaba3fc12c4cc4b066af6be8f2a66a, type: 3}
+  m_Name: testGraph
+  m_EditorClassIdentifier: 
+  m_GraphData:
+    rid: 8211920910247002113
+  references:
+    version: 2
+    RefIds:
+    - rid: 8211920910247002113
+      type: {class: TaskGraph, ns: HTNDesigner.DataStructure, asm: Assembly-CSharp}
+      data:
+        rootTask:
+          _taskType: 1
+          _id: ee80cf4b-cb10-451d-bb13-0338f15b122f
+        _primitiveTaskTable:
+          rid: 8211920910247002114
+        _compoundTaskTable:
+          rid: 8211920910247002115
+        _primitiveTasks:
+        - rid: 8211920910247002116
+        - rid: 8211920910247002117
+        - rid: 8211920910247002118
+        - rid: 8211920910247002119
+        - rid: 8211920910247002120
+        - rid: 8211920910247002121
+        _compoundTasks:
+        - rid: 8211920910247002122
+        - rid: 8211920910247002123
+    - rid: 8211920910247002114
+      type: {class: PassWordDictionary, ns: HTNDesigner.DataStructure, asm: Assembly-CSharp}
+      data:
+        list:
+        - Key: 9f0c663e-4e55-4b43-ac05-a51a1f3b58c3
+          Value: 0
+        - Key: 11815270-21c9-4511-a74a-6a8085aef6a6
+          Value: 1
+        - Key: 4bfec62a-d498-4c12-b064-69a79322c189
+          Value: 2
+        - Key: 1f5e3cbd-5083-4250-ab05-80fb86276a6e
+          Value: 3
+        - Key: 5f2c0e66-de57-4310-8826-c219d872b1c6
+          Value: 4
+        - Key: 9c114ca6-dc27-4d1b-b568-6332d0c5e168
+          Value: 5
+    - rid: 8211920910247002115
+      type: {class: PassWordDictionary, ns: HTNDesigner.DataStructure, asm: Assembly-CSharp}
+      data:
+        list:
+        - Key: 63fa5dbb-af75-4d92-ad3e-525eb0bd3a06
+          Value: 0
+        - Key: ee80cf4b-cb10-451d-bb13-0338f15b122f
+          Value: 1
+    - rid: 8211920910247002116
+      type: {class: TestTask, ns: , asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField:
+        - PropertyType: Boolean
+          PropertyName: SensorBool
+          PropertyValue: True
+        <TaskName>k__BackingField: TestTask
+    - rid: 8211920910247002117
+      type: {class: TestTask, ns: , asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField:
+        - PropertyType: String
+          PropertyName: ConditionType
+          PropertyValue: PRIMITIVE
+        <TaskName>k__BackingField: TestTask
+    - rid: 8211920910247002118
+      type: {class: TestTask, ns: , asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField: []
+        <TaskName>k__BackingField: TestTask
+    - rid: 8211920910247002119
+      type: {class: TestTask, ns: , asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField: []
+        <TaskName>k__BackingField: TestTask
+    - rid: 8211920910247002120
+      type: {class: TestTask, ns: , asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField: []
+        <TaskName>k__BackingField: TestTask
+    - rid: 8211920910247002121
+      type: {class: TestTask, ns: , asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField: []
+        <TaskName>k__BackingField: TestTask
+    - rid: 8211920910247002122
+      type: {class: CompoundTask, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _methods:
+        - rid: 8211920910247002124
+        - rid: 8211920910247002125
+    - rid: 8211920910247002123
+      type: {class: CompoundTask, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _methods:
+        - rid: 8211920910247002126
+        - rid: 8211920910247002127
+        - rid: 8211920910247002128
+    - rid: 8211920910247002124
+      type: {class: Method, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField: []
+        _subTaskNodesID:
+        - rid: 8211920910247002129
+    - rid: 8211920910247002125
+      type: {class: Method, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField: []
+        _subTaskNodesID:
+        - rid: 8211920910247002130
+    - rid: 8211920910247002126
+      type: {class: Method, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField:
+        - PropertyType: Boolean
+          PropertyName: SensorBool
+          PropertyValue: True
+        _subTaskNodesID:
+        - rid: 8211920910247002131
+    - rid: 8211920910247002127
+      type: {class: Method, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField:
+        - PropertyType: String
+          PropertyName: ConditionType
+          PropertyValue: PRIMITIVE
+        _subTaskNodesID:
+        - rid: 8211920910247002132
+    - rid: 8211920910247002128
+      type: {class: Method, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        <SerializeConditions>k__BackingField: []
+        _subTaskNodesID:
+        - rid: 8211920910247002133
+        - rid: 8211920910247002134
+        - rid: 8211920910247002135
+    - rid: 8211920910247002129
+      type: {class: TaskNode, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _taskType: 0
+        _id: 1f5e3cbd-5083-4250-ab05-80fb86276a6e
+    - rid: 8211920910247002130
+      type: {class: TaskNode, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _taskType: 0
+        _id: 5f2c0e66-de57-4310-8826-c219d872b1c6
+    - rid: 8211920910247002131
+      type: {class: TaskNode, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _taskType: 0
+        _id: 9f0c663e-4e55-4b43-ac05-a51a1f3b58c3
+    - rid: 8211920910247002132
+      type: {class: TaskNode, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _taskType: 0
+        _id: 11815270-21c9-4511-a74a-6a8085aef6a6
+    - rid: 8211920910247002133
+      type: {class: TaskNode, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _taskType: 0
+        _id: 4bfec62a-d498-4c12-b064-69a79322c189
+    - rid: 8211920910247002134
+      type: {class: TaskNode, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _taskType: 1
+        _id: 63fa5dbb-af75-4d92-ad3e-525eb0bd3a06
+    - rid: 8211920910247002135
+      type: {class: TaskNode, ns: HTNDesigner.Domain, asm: Assembly-CSharp}
+      data:
+        _taskType: 0
+        _id: 9c114ca6-dc27-4d1b-b568-6332d0c5e168

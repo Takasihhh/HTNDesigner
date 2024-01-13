@@ -11,3 +11,13 @@ public enum NodeType
      COMPOUND_NODE,
      PRIMITIVE_NODE
 }
+
+
+public enum BlackBoardValueType
+{
+    INT,
+    BOOL,
+    FLOAT,
+    ENUM,
+    TRANSFORM,
+}

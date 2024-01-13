@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="True">
+    <ui:VisualElement style="flex-direction: row;">
+        <ui:VisualElement style="width: 139px; height: 452px; flex-direction: column;">
+            <ui:VisualElement name="Title" style="height: 37px; flex-direction: row;">
+                <ui:Button text="保存" display-tooltip-when-elided="true" name="SaveBtn" style="width: 68px;" />
+                <uie:ObjectField label="黑板" name="BlackBoradData" type="UnityEngine.ScriptableObject, UnityEngine.CoreModule" style="width: 539px; height: 24px;" />
+            </ui:VisualElement>
+            <uie:EnumField value="Center" style="width: 131px;" />
+        </ui:VisualElement>
+        <ui:VisualElement style="width: 498px;">
+            <BlackBoardGraphView />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

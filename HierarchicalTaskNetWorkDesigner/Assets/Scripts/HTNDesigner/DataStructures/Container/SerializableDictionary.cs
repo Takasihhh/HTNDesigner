@@ -1,151 +1,206 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace HTNDesigner.DataStructure{
-	[Serializable]
-	public abstract class SerializableDictionary<TKey, TValue>
-		: IDictionary<TKey, TValue>, ISerializationCallbackReceiver
-	{
-		public const string NAME_KEYS = nameof(m_Keys);
-		public const string NAME_VALUES = nameof(m_Values);
+public class SerializableDictionary
+{
+}
 
-		// MEMBERS: -------------------------------------------------------------------------------
+[Serializable]
+public class SerializableDictionary<TKey, TValue> : SerializableDictionary, IDictionary<TKey, TValue>, ISerializationCallbackReceiver
+{
+    [SerializeField]
+    private List<SerializableKeyValuePair> list = new List<SerializableKeyValuePair>();
 
-		[NonSerialized] protected Dictionary<TKey, TValue> m_Dictionary = new Dictionary<TKey, TValue>();
+    [Serializable]
+    public struct SerializableKeyValuePair
+    {
+        public TKey Key;
+        public TValue Value;
 
-		[SerializeField] private TKey[] m_Keys;
-		[SerializeField] private TValue[] m_Values;
+        public SerializableKeyValuePair(TKey key, TValue value)
+        {
+            Key = key;
+            Value = value;
+        }
 
-		// PROPERTIES: ----------------------------------------------------------------------------
+        public void SetValue(TValue value)
+        {
+            Value = value;
+        }
+    }
 
-		public int Count => this.m_Dictionary.Count;
+    private Dictionary<TKey, uint> KeyPositions => _keyPositions.Value;
+    private Lazy<Dictionary<TKey, uint>> _keyPositions;
 
-		public ICollection<TKey> Keys => this.m_Dictionary.Keys;
-		public ICollection<TValue> Values => this.m_Dictionary.Values;
+    public SerializableDictionary()
+    {
+        _keyPositions = new Lazy<Dictionary<TKey, uint>>(MakeKeyPositions);
+    }
 
-		public TValue this[TKey key]
-		{
-			get => this.m_Dictionary[key];
-			set => this.m_Dictionary[key] = value;
-		}
+    public SerializableDictionary(IDictionary<TKey, TValue> dictionary)
+    {
+        _keyPositions = new Lazy<Dictionary<TKey, uint>>(MakeKeyPositions);
 
-		bool ICollection<KeyValuePair<TKey, TValue>>.IsReadOnly => false;
+        if (dictionary == null)
+        {
+            throw new ArgumentException("The passed dictionary is null.");
+        }
 
-		// PUBLIC METHODS: ------------------------------------------------------------------------
+        foreach (KeyValuePair<TKey, TValue> pair in dictionary)
+        {
+            Add(pair.Key, pair.Value);
+        }
+    }
 
-		public void Add(TKey key, TValue value)
-		{
-			this.m_Dictionary.Add(key, value);
-		}
+    private Dictionary<TKey, uint> MakeKeyPositions()
+    {
+        int numEntries = list.Count;
 
-		public bool ContainsKey(TKey key)
-		{
-			return this.m_Dictionary.ContainsKey(key);
-		}
+        Dictionary<TKey, uint> result = new Dictionary<TKey, uint>(numEntries);
 
-		public bool Remove(TKey key)
-		{
-			return this.m_Dictionary.Remove(key);
-		}
+        for (int i = 0; i < numEntries; ++i)
+        {
+            result[list[i].Key] = (uint) i;
+        }
 
-		public bool TryGetValue(TKey key, out TValue value)
-		{
-			return this.m_Dictionary.TryGetValue(key, out value);
-		}
+        return result;
+    }
 
-		public void Clear()
-		{
-			this.m_Dictionary.Clear();
-		}
+    public void OnBeforeSerialize()
+    {
+    }
 
-		void ICollection<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> item)
-		{
-			(this.m_Dictionary as ICollection<KeyValuePair<TKey, TValue>>).Add(item);
-		}
+    public void OnAfterDeserialize()
+    {
+        // After deserialization, the key positions might be changed
+        _keyPositions = new Lazy<Dictionary<TKey, uint>>(MakeKeyPositions);
+    }
 
-		bool ICollection<KeyValuePair<TKey, TValue>>.Contains(KeyValuePair<TKey, TValue> item)
-		{
-			return (this.m_Dictionary as ICollection<KeyValuePair<TKey, TValue>>).Contains(item);
-		}
+    #region IDictionary
+    public TValue this[TKey key]
+    {
+        get => list[(int) KeyPositions[key]].Value;
+        set
+        {
+            if (KeyPositions.TryGetValue(key, out uint index))
+            {
+                list[(int) index].SetValue(value);
+            }
+            else
+            {
+                KeyPositions[key] = (uint) list.Count;
 
-		void ICollection<KeyValuePair<TKey, TValue>>.CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
-		{
-			(this.m_Dictionary as ICollection<KeyValuePair<TKey, TValue>>).CopyTo(array, arrayIndex);
-		}
+                list.Add(new SerializableKeyValuePair(key, value));
+            }
+        }
+    }
 
-		bool ICollection<KeyValuePair<TKey, TValue>>.Remove(KeyValuePair<TKey, TValue> item)
-		{
-			return (this.m_Dictionary as ICollection<KeyValuePair<TKey, TValue>>).Remove(item);
-		}
+    public ICollection<TKey> Keys => list.Select(tuple => tuple.Key).ToArray();
+    public ICollection<TValue> Values => list.Select(tuple => tuple.Value).ToArray();
 
-		public Dictionary<TKey, TValue>.Enumerator GetEnumerator()
-		{
-			return this.m_Dictionary.GetEnumerator();
-		}
+    public void Add(TKey key, TValue value)
+    {
+        if (KeyPositions.ContainsKey(key))
+        {
+            throw new ArgumentException("An element with the same key already exists in the dictionary.");
+        }
+        else
+        {
+            KeyPositions[key] = (uint) list.Count;
 
-		IEnumerator IEnumerable.GetEnumerator()
-		{
-			return this.m_Dictionary.GetEnumerator();
-		}
+            list.Add(new SerializableKeyValuePair(key, value));
+        }
+    }
 
-		IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator()
-		{
-			return this.m_Dictionary.GetEnumerator();
-		}
+    public bool ContainsKey(TKey key) => KeyPositions.ContainsKey(key);
 
-		// SERIALIZATION CALLBACKS: ---------------------------------------------------------------
+    public bool Remove(TKey key)
+    {
+        if (KeyPositions.TryGetValue(key, out uint index))
+        {
+            Dictionary<TKey, uint> kp = KeyPositions;
 
-		void ISerializationCallbackReceiver.OnBeforeSerialize()
-		{
-			if (AssemblyUtils.IsReloading) return;
-			this.BeforeSerialize();
-		}
+            kp.Remove(key);
 
-		void ISerializationCallbackReceiver.OnAfterDeserialize()
-		{
-			if (AssemblyUtils.IsReloading) return;
-			this.AfterSerialize();
-		}
+            list.RemoveAt((int) index);
 
-		protected virtual void BeforeSerialize()
-		{
-			if (this.m_Dictionary == null || this.m_Dictionary.Count == 0)
-			{
-				this.m_Keys = null;
-				this.m_Values = null;
-			}
-			else
-			{
-				int count = this.m_Dictionary.Count;
-				this.m_Keys = new TKey[count];
-				this.m_Values = new TValue[count];
-				int i = 0;
+            int numEntries = list.Count;
 
-				using Dictionary<TKey, TValue>.Enumerator dict = this.m_Dictionary.GetEnumerator();
-				while (dict.MoveNext())
-				{
-					this.m_Keys[i] = dict.Current.Key;
-					this.m_Values[i] = dict.Current.Value;
-					i++;
-				}
-			}
-		}
+            for (uint i = index; i < numEntries; i++)
+            {
+                kp[list[(int) i].Key] = i;
+            }
 
-		protected virtual void AfterSerialize()
-		{
-			this.m_Dictionary ??= new Dictionary<TKey, TValue>();
-			this.m_Dictionary.Clear();
+            return true;
+        }
 
-			if (this.m_Keys == null || this.m_Values == null) return;
+        return false;
+    }
 
-			for (int i = 0; i < this.m_Keys.Length; i++)
-			{
-				this.m_Dictionary[this.m_Keys[i]] = i < this.m_Values.Length
-					? this.m_Values[i]
-					: default;
-			}
-		}
-	}
+    public bool TryGetValue(TKey key, out TValue value)
+    {
+        if (KeyPositions.TryGetValue(key, out uint index))
+        {
+            value = list[(int) index].Value;
+
+            return true;
+        }
+
+        value = default;
+            
+        return false;
+    }
+    #endregion
+
+    #region ICollection
+    public int Count => list.Count;
+    public bool IsReadOnly => false;
+
+    public void Add(KeyValuePair<TKey, TValue> kvp) => Add(kvp.Key, kvp.Value);
+
+    public void Clear()
+    {
+        list.Clear();
+        KeyPositions.Clear();
+    }
+
+    public bool Contains(KeyValuePair<TKey, TValue> kvp) => KeyPositions.ContainsKey(kvp.Key);
+
+    public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
+    {
+        int numKeys = list.Count;
+
+        if (array.Length - arrayIndex < numKeys)
+        {
+            throw new ArgumentException("arrayIndex");
+        }
+
+        for (int i = 0; i < numKeys; ++i, ++arrayIndex)
+        {
+            SerializableKeyValuePair entry = list[i];
+
+            array[arrayIndex] = new KeyValuePair<TKey, TValue>(entry.Key, entry.Value);
+        }
+    }
+
+    public bool Remove(KeyValuePair<TKey, TValue> kvp) => Remove(kvp.Key);
+    #endregion
+
+    #region IEnumerable
+    public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
+    {
+        return list.Select(ToKeyValuePair).GetEnumerator();
+
+        KeyValuePair<TKey, TValue> ToKeyValuePair(SerializableKeyValuePair skvp)
+        {
+            return new KeyValuePair<TKey, TValue>(skvp.Key, skvp.Value);
+        }
+    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    #endregion
+}
 }

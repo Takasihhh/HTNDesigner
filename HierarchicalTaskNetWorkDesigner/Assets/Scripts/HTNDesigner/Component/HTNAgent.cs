@@ -18,8 +18,7 @@ namespace HTNDesigner.Component
         private HTNRunner _planRunner;
         [SerializeField]private WorldStateBlackBoard _worldState;
         private WorldStateBlackBoard _copy;
-        private TaskTree _taskTree;
-        [SerializeField] private TaskTreeBuilder _treeData;
+        [SerializeField] private TaskGraphData_SO _graph;
         private TaskStatus _curStatus;
 
 
@@ -52,7 +51,6 @@ namespace HTNDesigner.Component
         {
             if (val)
             {
-                
                 GetComponent<NavMeshAgent>().speed = 2;
                 RePlaning();
             }
@@ -93,6 +91,11 @@ namespace HTNDesigner.Component
             }
         }
 
+        private void FixedUpdate()
+        {
+            _planRunner.FixedUpdate();
+        }
+
         private void RePlaning()
         {
             var nPlan = _planMaker.MakePlan();
@@ -100,10 +103,10 @@ namespace HTNDesigner.Component
             _curStatus = TaskStatus.TASK_RUNNIGN;
         }
 
-        public GameObject TaskInstance { get=>this.gameObject; }
-        public TaskNode m_Root { get => _treeData.m_Tree.m_RootNode; }
+        public MonoBehaviour TaskInstance { get=>this; }
+        public TaskGraph TaskGraph { get => _graph.GraphData; }
 
-        public WorldStateBlackBoard m_worldState
+        public WorldStateBlackBoard WorldState_BB
         {
             get => _worldState;
         }

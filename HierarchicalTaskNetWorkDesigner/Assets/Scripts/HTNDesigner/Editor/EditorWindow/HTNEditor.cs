@@ -1,63 +1,52 @@
 using System;
 using System.IO;
-using HTNDesigner.DataStructure;
-using HTNDesigner.Domain;
+using HTNDesigner.Utilies;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 namespace HTNDesigner.Editor
 {
-
+    using Utilies;
     using Data;
     public class HTNEditor : EditorWindow
     {
-        public static HTNEditor _htnEditor;
-        public TaskTreeBuilder _treeAssets;
-        private string result = "树：";
-        private TwoPanelExtensionHorizontal mainContainer;
-        private VisualElement leftBoradContainer;
         private HTNGraphView _graphView;
-        CompoundNodeGraph rootNode;
-        
-        [MenuItem("Window/AI/HTN Editor")]
-        public static void OpenEditorWindow()
+        private static TextField fileNameTextField;
+        private bool onInit;
+
+        [MenuItem("Window/AI/HTNDesigner")]
+        private static void OpenWnd()
         {
-            _htnEditor = EditorWindow.GetWindow<HTNEditor>();
-            _htnEditor.titleContent = new GUIContent("HTN Editor");
-            _htnEditor.minSize = new Vector2(540, 480);
-            _htnEditor.maxSize = new Vector2(1280, 720);
+            var wnd = GetWindow<HTNEditor>();
+            wnd.titleContent = new GUIContent("HTN编辑器");
+            wnd.maxSize = new Vector2(1920, 1080);
+            wnd.minSize = new Vector2(1280, 720);
         }
-        
-        private void CreateGUI()
+
+        private void OnEnable()
         {
-            TaskTreeBuilder existingAsset = AssetDatabase.LoadAssetAtPath<TaskTreeBuilder>("Assets/Resources/TreeAssets/TreeData.asset");
-            if (existingAsset != null)
-            {
-                _treeAssets = existingAsset;
-                Debug.Log("覆盖老文件");
-            }
-            else
-            {
-                _treeAssets = CreateInstance<TaskTreeBuilder>();
-                Debug.Log("创建新文件");
-            }
-            //加载主界面
-            DrawWindow();
-            RegisterBtn();
-            TryBuildTree();
+                IOUtility.DrawInspectorAct += DrawInspector;
+                IOUtility.ClearInspectorAct += ClearInspector;
+                LoadWnd();
+                Clear();
+                IOUtility.InitializeData(_graphView, "");
         }
-        private void DrawWindow()
+
+        private void OnDisable()
         {
-            DrawMainContainer();
+            Clear();
+        }
+
+        private void LoadWnd()
+        {
+            DrawMainContainer();    
             DrawGraphView();
+            BindItems();
         }
 
         private void DrawMainContainer()
         {
-            // mainContainer = new TwoPanelExtensionHorizontal();
-            // mainContainer.Q<VisualElement>("RightPanel").Add(_graphView);
-            // rootVisualElement.Add(mainContainer);
             //加载主界面
             VisualTreeAsset editorViewTree = (VisualTreeAsset)EditorGUIUtility.Load("MainWnd.uxml");
             TemplateContainer editorInstance = editorViewTree.CloneTree();
@@ -67,11 +56,7 @@ namespace HTNDesigner.Editor
 
         private void DrawGraphView()
         {
-            _graphView = new HTNGraphView();
-            _graphView.root = rootVisualElement;
-            rootNode = new CompoundNodeGraph();
-            rootNode.title = "根节点";
-            _graphView.AddElement(rootNode);
+            _graphView = new HTNGraphView(this);
             _graphView.style.minHeight = 1000;
             _graphView.style.minWidth = 500;
             _graphView.StretchToParentSize();
@@ -79,109 +64,87 @@ namespace HTNDesigner.Editor
         }
 
 
-        private void TryBuildTree()
+        private void DrawInspector(VisualElement element)
         {
-        }
-
-        private void RegisterBtn()
-        {
-            var ele = rootVisualElement.Q<Button>("SaveBtn");
-            var lele = rootVisualElement.Q<Button>("LoadBtn");
-            lele.clicked += DebugThis;
-            ele.clicked += SaveTree;
+            var container = rootVisualElement.Q<VisualElement>("ContextContainer");
+            container.Clear();
+            container.Add(element);
         }
         
         
-        private void SaveTree()
+        private void BindItems()
         {
-            Debug.Log("保存");
-            if (rootNode != null)
+            // rootVisualElement.Q<Button>("MiniMapBtn").clicked += ToggleMiniMap;
+            rootVisualElement.Q<Button>("SaveBtn").clicked += SaveFile;
+            rootVisualElement.Q<Button>("LoadBtn").clicked += LoadFile;
+            rootVisualElement.Q<Button>("ClearBtn").clicked += Clear;
+            fileNameTextField = rootVisualElement.Q<TextField>("FileNameText");
+           
+            fileNameTextField.RegisterValueChangedCallback( callback =>
             {
-                _treeAssets.m_RootNode = rootNode.SearchChildMethod();
-                if (_treeAssets.m_RootNode.m_CompoundTask == null)
-                {
-                    Debug.LogError("保存的时候就是没有的");
-                }
-
-            }
-            else
-            {
-                Debug.Log("不存在rootNode");
-            }
-            _treeAssets.SaveScriptableObject();
+                fileNameTextField.value = callback.newValue.RemoveWhitespaces().RemoveSpecialCharacters();
+            });
         }
 
+        // private void ToggleMiniMap()
+        // {
+        //     _graphView.ToggleMiniMap();
+        // }
 
-        #region Debug
 
-        
-        private void DebugThis()
+        #region 功能
+
+        private void CreateNewFile()
         {
-            Debug.Log("Debug");
             
-            // string path = "Assets/Resources/TreeAssets/m_TreeData.json";
-            // string treeJson = Resources.Load<TextAsset>("TreeAssets/m_TreeData").text;
-            // var tNode = JsonUtility.FromJson<TaskNode>(treeJson);
-            
-            if (_treeAssets.m_Tree.m_RootNode != null)
-            {
-                result = "树: ";
-                DebugTree(_treeAssets.m_Tree.m_RootNode.m_CompoundTask);
-            }
-            else
-            {
-                Debug.LogError("没有东西");
-            }
-            Debug.Log(result);
         }
-        
-        private void DebugTree(CompoundTask task)
+
+        private void SaveFile()
         {
-            if (task != null)
+            if (string.IsNullOrEmpty(fileNameTextField.value))
             {
-                if (task.m_Methods != null)
-                {
-                    foreach (var mth in task.m_Methods)
-                    {
-                        foreach (var node in mth.SubTasks)
-                        {
-                            if (node.m_type == TaskNode.TaskType.PRIMITIVE)
-                            {
-                                result +=
-                                    $"----------\n----------{node.m_PrimitiveTask.TaskName}+{node.m_PrimitiveTask.TestName()}";
-                            }
-                            else
-                            {
-                                result += "-----------\n";
-                                DebugTree(node.m_CompoundTask);
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    foreach (var node in task.m_Method.SubTasks)
-                    {
-                        if (node.m_type == TaskNode.TaskType.PRIMITIVE)
-                        {
-                            result +=
-                                $"----------\n----------{node.m_PrimitiveTask.TaskName}+{node.m_PrimitiveTask.TestName()}";
-                        }
-                        else
-                        {
-                            result += "-----------\n";
-                            DebugTree(node.m_CompoundTask);
-                        }
-                    }
-                }
-            }
-            else
-            {
-                Debug.LogError("任务不存在");
+                EditorUtility.DisplayDialog("Invalid file name.", "Please ensure the file name you've typed in is valid.", "Roger!");
+
                 return;
             }
+
+            IOUtility.InitializeData(_graphView, fileNameTextField.value);
+            IOUtility.Save();
+        }
+
+        private void LoadFile()
+        {
+            string filePath = EditorUtility.OpenFilePanel("HTN Graphs", "Assets/Editor/HTNDesigner/Graphs", "asset");
+
+            if (string.IsNullOrEmpty(filePath))
+            {
+                return;
+            }
+
+            Clear();
+            IOUtility.InitializeData(_graphView, Path.GetFileNameWithoutExtension(filePath));
+            IOUtility.Load();
+        }
+
+        private void Clear()
+        {
+            _graphView.ClearGraph();
+            var container = rootVisualElement.Q<VisualElement>("ContextContainer");
+            container.Clear();
+            IOUtility.ClearData();
+        }
+
+        public void ClearInspector()
+        {
+            var container = rootVisualElement.Q<VisualElement>("ContextContainer");
+            container.Clear();
         }
         
+        public static void UpdateFileName(string fileName)
+        {
+            fileNameTextField.value = fileName;
+        }
+
         #endregion
     }
 }

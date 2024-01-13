@@ -1,13 +1,27 @@
 using System;
+using System.Collections.Generic;
 using HTNDesigner.BlackBoard;
 
 namespace HTNDesigner.Domain
 {
     [Serializable]
-    public class Condition
+    public abstract class Condition
     {
-        public virtual bool CheckCondition(WorldStateBlackBoard worldState) => true;
-        
-        public virtual string ConditonName { get; }
+        protected List<Func<bool,WorldStateBlackBoard>> _conditions;
+
+        public bool CheckCondition(WorldStateBlackBoard worldState)
+        {
+            foreach (var iFunc in _conditions)
+            {
+                if (!iFunc(worldState)) return false;
+            }
+
+            return true;
+        }
+
+        protected virtual void InitCondtions()
+        {
+            _conditions = new List<Func<bool, WorldStateBlackBoard>>();
+        }
     }
 }

@@ -16,6 +16,7 @@ namespace HTNDesigner.DataStructure
         {
             PRIMITIVE,
             LIST
+            
         }
 
         [SerializeField]private ConditionType _type;

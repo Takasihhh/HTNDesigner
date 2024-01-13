@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using HTNDesigner.BlackBoard;
+using HTNDesigner.Domain;
 using UnityEditor;
 using UnityEngine;
 
@@ -30,5 +32,32 @@ public static class DataExtension
             }
 
             AssetDatabase.SaveAssets();
+    }
+
+    public static List<Func<WorldStateBlackBoard, bool>> ConstructConditions(this List<ConditionStruct> SerializeConditions)
+    {
+        List<Func<WorldStateBlackBoard, bool>> conditions = new List<Func<WorldStateBlackBoard, bool>>();
+        foreach (var vaCondition in SerializeConditions)
+        {
+            if (vaCondition.PropertyType == "Boolean")
+            {
+                conditions.Add((ws) =>
+                {
+                    bool blackBoardVal = ws.GetValue<bool>(vaCondition.PropertyName);
+                    bool currentVal = bool.Parse(vaCondition.PropertyValue);
+                    return blackBoardVal == currentVal;
+                });
+            }
+
+            if (vaCondition.PropertyType == "String")
+            {
+                conditions.Add((ws) =>
+                {
+                    return ws.GetValue<string>(vaCondition.PropertyName) == vaCondition.PropertyValue;
+                });   
+            }
+        }
+
+        return conditions;
     }
 }

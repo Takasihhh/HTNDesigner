@@ -18,7 +18,6 @@ namespace HTNDesigner.Tick
         public HTNRunner(ITaskAgent agent)
         {
             _agent = agent;
-            _curTask = new PrimitiveTask();
         }
         
         /// <summary>
@@ -53,14 +52,22 @@ namespace HTNDesigner.Tick
             return _curStatus;
         }
 
+        public void FixedUpdate()
+        {
+            if (_curTask != null)
+            {
+                _curTask.OnFixedUpdate();
+            }
+        }
+
         /// <summary>
         /// 开始执行下一个任务
         /// </summary>
         public void RunNextTask()
         {
-            var so = _agent.m_worldState;
+            var so = _agent.WorldState_BB;
             _curTask.ApplyEffect(ref so);
-            _agent.m_worldState.DeepCopy(so);
+            //_agent.WorldState_BB.DeepCopy(so);
             if (_listEnumrator.MoveNext())
             {
                 StartNewTask();
@@ -77,7 +84,7 @@ namespace HTNDesigner.Tick
         private void StartNewTask()
         {
             _curTask = _listEnumrator.Current;
-
+            _curTask.Initialize(_agent);
 #region Debug
 #if UNITY_EDITOR
             if (_curTask == null)
@@ -95,7 +102,7 @@ namespace HTNDesigner.Tick
 #endif
 #endregion
 
-            _curTask.Agent = _agent;
+
             _curTask.OnStart();
             Debug.Log($"当前进入状态: ({_curTask.TaskName })。");
             _curStatus = TaskStatus.TASK_RUNNIGN;

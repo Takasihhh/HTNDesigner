@@ -244,11 +244,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 105370718}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7d545741971e1bb4987717a907a42768, type: 3}
+  m_Script: {fileID: 11500000, guid: cab4de68ba505054fbd4e7a225f0da4b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalColor: {r: 0.35219562, g: 1, b: 0, a: 1}
-  triggerColor: {r: 1, g: 0, b: 0, a: 1}
+  _worldState: {fileID: 11400000, guid: feb17878d8432d74b9ffff46f7f2ae6f, type: 2}
+  _graph: {fileID: 11400000, guid: e43b714977100a949a01d8a14fb21615, type: 2}
+  testVal: 0
 --- !u!1 &307543127
 GameObject:
   m_ObjectHideFlags: 0
@@ -412,7 +413,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _worldState: {fileID: 11400000, guid: 839bfc4c137838c4f8b30997653d711b, type: 2}
-  _treeData: {fileID: 11400000, guid: cf952e4070612c74780750b3c578e46b, type: 2}
+  _graph: {fileID: 0}
   testVal: 0
 --- !u!136 &609953383
 CapsuleCollider:

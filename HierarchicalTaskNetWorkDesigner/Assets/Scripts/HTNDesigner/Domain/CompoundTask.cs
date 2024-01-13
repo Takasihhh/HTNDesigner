@@ -1,5 +1,7 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
+using System.Net.NetworkInformation;
 using HTNDesigner.BlackBoard;
 using HTNDesigner.DataStructure;
 using UnityEngine;
@@ -9,27 +11,19 @@ namespace HTNDesigner.Domain
     [Serializable]
     public sealed class CompoundTask
     {
-        [Serializable]
-        public struct ConditionMethod
-        {
-            public ConditionContainer container;
-            [SerializeField]public Method method;
-        }
-        
-        
-        [SerializeField]private List<ConditionMethod> _methods;
-        [SerializeField]private ConditionMethod _method;
+        [SerializeReference] private List<Method> _methods;
+        private List<Method> _satisfaiedMethodList;
+        private List<Method>.Enumerator _satisfaiedMethodIterator;
         public CompoundTask(){}
 
-        public CompoundTask(List<ConditionMethod> methods)
+        public CompoundTask(List<Method> methods)
         {
-            _methods = new List<ConditionMethod>();
             _methods = methods;
         }
 
-        public CompoundTask(ConditionMethod method)
+        public void Initialize()
         {
-            _method = method;
+            _satisfaiedMethodList = new List<Method>();
         }
         
         /// <summary>
@@ -38,59 +32,34 @@ namespace HTNDesigner.Domain
         /// <returns></returns>
         public Method SearchForSatisfaiedMethod(WorldStateBlackBoard worldState)
         {
-            if (_methods != null && _methods.Count>0)
+            if (_satisfaiedMethodList == null || _satisfaiedMethodList.Count<=0)
+                SearchForSatisfaiedMethods(worldState);
+            Method result = _satisfaiedMethodIterator.Current;
+
+            if (result != null)
             {
-                foreach (var method in _methods)
-                {
-                    if (method.container == null)
-                    {
-                        return method.method;
-                    }
-                    if (method.container.CheckCondition(worldState))
-                    {
-                        return method.method;
-                    }
-                }
-            }
-            else
-            {
-                if (_method.container == null ||_method.container.CheckCondition(worldState))
-                {
-                    return _method.method;
-                }
+                _satisfaiedMethodIterator.MoveNext();
+                return result;
             }
             return null;
         }
 
-
-        public Method m_Method
+        private List<Method> SearchForSatisfaiedMethods(WorldStateBlackBoard worldState)
         {
-            get
+            _satisfaiedMethodList = new List<Method>();
+            foreach (var method in _methods)
             {
-                 return _method.method;
+                if (method.CheckConditions(worldState))
+                {
+                    _satisfaiedMethodList.Add(method);
+                }
             }
+
+            _satisfaiedMethodIterator = _satisfaiedMethodList.GetEnumerator();
+            _satisfaiedMethodIterator.MoveNext();
+            return _satisfaiedMethodList;
         }
 
-        public List<Method> m_Methods
-        {
-            get
-            {
-                List<Method> mss = new List<Method>();
-                if(_methods !=null && _methods.Count>0)
-                {
-                    foreach (var method in _methods)
-                    {
-                        mss.Add(method.method);
-                    }
-                }
-                else
-                {
-                    return null;
-                }
-
-                return mss;
-            }
-        }
     }
     
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using HTNDesigner.DataStructure;
+using HTNDesigner.Utilies;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -8,104 +9,65 @@ using UnityEngine.Serialization;
 
 namespace HTNDesigner.BlackBoard
 {
+    using DataStructure.Variable;
     [CreateAssetMenu(fileName = "new BlackBoard",menuName = "HTNDesigner/BlackBoard")]
     public class WorldStateBlackBoard:ScriptableObject
     {
         public event Action WorldStateChageEvent;
-        private Dictionary<string, Sensor> m_BlackBoradDic;
-
-
-        [SerializeField] private SensorBase<int> health;
-        [SerializeField]private SensorBase<bool> onArrive;
-        [SerializeField] private SensorBase<bool> cd;
-        [SerializeField] private SensorBase<bool> needHealing;
-
+        [SerializeReference] private PassWordDictionary m_BlackBoardDic;
+        [SerializeReference]private List<Sensor> m_BB_List;
         public WorldStateBlackBoard()
         {
             InitBlackBoard();
         }
 
-        public void DeepCopy(WorldStateBlackBoard value)
+
+        public void AddItem(Sensor value)
         {
-            health.SetValue(value.GetValue<int>("健康值"));
-            onArrive.SetValue(value.GetValue<bool>("是否到达"));
-            cd.SetValue(value.GetValue<bool>("大招CD"));
-            needHealing.SetValue(value.GetValue<bool>("需要治疗"));
+            m_BB_List ??= new List<Sensor>();
+            m_BlackBoardDic ??= new PassWordDictionary();
+            m_BB_List.Add(value);
+            m_BlackBoardDic.Add(value.Name,m_BB_List.Count-1);
         }
         
-        private void InitBlackBoard()
+        public void DeepCopy(WorldStateBlackBoard value)
         {
-            m_BlackBoradDic = new Dictionary<string, Sensor>();
-            health = new SensorBase<int>(10);
-            onArrive = new SensorBase<bool>(false);
-            cd = new SensorBase<bool>(true);
-            needHealing = new SensorBase<bool>(false);
-            //Debug.Log(nameof(health));
-            m_BlackBoradDic.Add("健康值",health);
-            m_BlackBoradDic.Add("是否到达",onArrive);
-            m_BlackBoradDic.Add("大招CD",cd);
-            m_BlackBoradDic.Add("需要治疗",needHealing);
-            foreach (var kp in m_BlackBoradDic)
-            {
-                kp.Value.ActionOnValueChange += () =>
-                {
-                    WorldStateChageEvent?.Invoke();
-                };
-            }
+            m_BB_List = ReflectionMethodExtension.DeepCopy(value.m_BB_List);
+            // m_BlackBoardDic = ReflectionMethodExtension.DeepCopy(value.m_BlackBoardDic);
+            m_BlackBoardDic = value.m_BlackBoardDic;
+        }
+        
+        public void InitBlackBoard()
+        {
+            m_BlackBoardDic = new PassWordDictionary();
+            m_BB_List = new List<Sensor>();
         }
 
         public void ResetWorld()
         {
-            m_BlackBoradDic.Clear();
-            m_BlackBoradDic = new Dictionary<string, Sensor>();
-            health = new SensorBase<int>(10);
-            onArrive = new SensorBase<bool>(false);
-            cd = new SensorBase<bool>(true);
-            needHealing = new SensorBase<bool>(false);
-            //Debug.Log(nameof(health));
-            m_BlackBoradDic.Add("健康值",health);
-            m_BlackBoradDic.Add("是否到达",onArrive);
-            m_BlackBoradDic.Add("大招CD",cd);
-            m_BlackBoradDic.Add("需要治疗",needHealing);
-            foreach (var kp in m_BlackBoradDic)
-            {
-                kp.Value.ActionOnValueChange += () =>
-                {
-                    WorldStateChageEvent?.Invoke();
-                };
-            }
         }
 
         public T GetValue<T>(string key)
         {
-            m_BlackBoradDic.TryGetValue(key,out Sensor result);
-            if (result == null)
-            {
-                return default;
-            }
+            m_BlackBoardDic.TryGetValue(key,out int index);
+            var result = m_BB_List[index];
 
             return (result as SensorBase<T>).GetValue();
-        }
-
-        public Sensor GetValue(string key)
-        {
-            m_BlackBoradDic.TryGetValue(key,out Sensor result);
-            if (result == null)
-            {
-                return default;
-            }
-            return result;
         }
         
         internal bool SetValue<T>(string key,T value)
         {
-            if (m_BlackBoradDic != null)
+            if (m_BlackBoardDic != null)
             {
-                if (m_BlackBoradDic.ContainsKey(key))
+                if (m_BlackBoardDic.ContainsKey(key))
                 {
-                    SensorBase<T> res = new SensorBase<T>();
-                    res.SetValue(value);
-                    m_BlackBoradDic[key] = res;
+                    // SensorBase<T> res = new SensorBase<T>();
+                    // res.SetValue(value);
+                    // m_BB_List ??= new List<Sensor>();
+                    // m_BB_List.Add(res);
+                    // m_BlackBoardDic[key] = m_BB_List.Count-1;
+                    int index = m_BlackBoardDic[key];
+                    (m_BB_List[index] as SensorBase<T>)?.SetValue(value);
                     return true;
                 }
                 else

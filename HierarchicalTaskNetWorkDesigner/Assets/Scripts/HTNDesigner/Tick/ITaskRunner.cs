@@ -1,11 +1,12 @@
 using HTNDesigner.BlackBoard;
+using HTNDesigner.DataStructure;
 using HTNDesigner.Domain;
 using UnityEngine;
 
 
 public interface ITaskAgent
 {
-    public GameObject TaskInstance { get; }
-    public TaskNode m_Root { get;}
-    public  WorldStateBlackBoard m_worldState { get; }
+    public MonoBehaviour TaskInstance { get; }
+    public TaskGraph TaskGraph { get;}
+    public  WorldStateBlackBoard WorldState_BB { get; }
 }

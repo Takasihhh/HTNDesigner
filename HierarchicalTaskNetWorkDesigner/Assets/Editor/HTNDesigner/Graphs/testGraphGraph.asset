@@ -1,0 +1,109 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5edd09a34d17470e9a57ff2437a54655, type: 3}
+  m_Name: testGraphGraph
+  m_EditorClassIdentifier: 
+  <FileName>k__BackingField: testGraph
+  <Nodes>k__BackingField:
+  - <ID>k__BackingField: ee80cf4b-cb10-451d-bb13-0338f15b122f
+    <Name>k__BackingField: RootNode
+    <NodeType>k__BackingField: 1
+    <ConnectionID>k__BackingField:
+    - 9f0c663e-4e55-4b43-ac05-a51a1f3b58c3
+    - 11815270-21c9-4511-a74a-6a8085aef6a6
+    - 4bfec62a-d498-4c12-b064-69a79322c189
+    <Position>k__BackingField: {x: 370.40002, y: 322.4}
+    <Conditions>k__BackingField: []
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 1
+  - <ID>k__BackingField: 9f0c663e-4e55-4b43-ac05-a51a1f3b58c3
+    <Name>k__BackingField: TestTask
+    <NodeType>k__BackingField: 0
+    <ConnectionID>k__BackingField: []
+    <Position>k__BackingField: {x: 757.6, y: 157.6}
+    <Conditions>k__BackingField:
+    - PropertyType: Boolean
+      PropertyName: SensorBool
+      PropertyValue: True
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  - <ID>k__BackingField: 11815270-21c9-4511-a74a-6a8085aef6a6
+    <Name>k__BackingField: TestTask
+    <NodeType>k__BackingField: 0
+    <ConnectionID>k__BackingField: []
+    <Position>k__BackingField: {x: 794.4, y: 480.8}
+    <Conditions>k__BackingField:
+    - PropertyType: String
+      PropertyName: ConditionType
+      PropertyValue: PRIMITIVE
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  - <ID>k__BackingField: 4bfec62a-d498-4c12-b064-69a79322c189
+    <Name>k__BackingField: TestTask
+    <NodeType>k__BackingField: 0
+    <ConnectionID>k__BackingField:
+    - 63fa5dbb-af75-4d92-ad3e-525eb0bd3a06
+    <Position>k__BackingField: {x: 757.6, y: -16}
+    <Conditions>k__BackingField: []
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  - <ID>k__BackingField: 63fa5dbb-af75-4d92-ad3e-525eb0bd3a06
+    <Name>k__BackingField: CompoundNode
+    <NodeType>k__BackingField: 1
+    <ConnectionID>k__BackingField:
+    - 1f5e3cbd-5083-4250-ab05-80fb86276a6e
+    - 5f2c0e66-de57-4310-8826-c219d872b1c6
+    <Position>k__BackingField: {x: 998.4, y: -16}
+    <Conditions>k__BackingField: []
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  - <ID>k__BackingField: 08d9dc99-a434-4443-8627-e041c1d1685a
+    <Name>k__BackingField: Hub
+    <NodeType>k__BackingField: 2
+    <ConnectionID>k__BackingField:
+    - 9c114ca6-dc27-4d1b-b568-6332d0c5e168
+    <Position>k__BackingField: {x: 1396, y: -16}
+    <Conditions>k__BackingField: []
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  - <ID>k__BackingField: 1f5e3cbd-5083-4250-ab05-80fb86276a6e
+    <Name>k__BackingField: TestTask
+    <NodeType>k__BackingField: 0
+    <ConnectionID>k__BackingField:
+    - 08d9dc99-a434-4443-8627-e041c1d1685a
+    <Position>k__BackingField: {x: 1193.6, y: -136}
+    <Conditions>k__BackingField: []
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  - <ID>k__BackingField: 5f2c0e66-de57-4310-8826-c219d872b1c6
+    <Name>k__BackingField: TestTask
+    <NodeType>k__BackingField: 0
+    <ConnectionID>k__BackingField:
+    - 08d9dc99-a434-4443-8627-e041c1d1685a
+    <Position>k__BackingField: {x: 1204.8, y: 118.399994}
+    <Conditions>k__BackingField: []
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  - <ID>k__BackingField: 9c114ca6-dc27-4d1b-b568-6332d0c5e168
+    <Name>k__BackingField: TestTask
+    <NodeType>k__BackingField: 0
+    <ConnectionID>k__BackingField: []
+    <Position>k__BackingField: {x: 1626.4, y: -16}
+    <Conditions>k__BackingField: []
+    <Description>k__BackingField: 
+    <isRootNode>k__BackingField: 0
+  <BBValue>k__BackingField:
+    <BBValueList>k__BackingField:
+    - typeName: SensorBool
+      Name: SensorBool
+    - typeName: SensorEnum
+      Name: ConditionType
